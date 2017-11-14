@@ -1,0 +1,53 @@
+-- QuickEdit v2.0.3
+
+# Bug Fixes
+	
+	- Prevent About window from opening other tool changelogs.
+
+-- QuickEdit v2.0.2 (v3767)
+
+# Features
+	- Add support for editing skinned meshes.
+
+-- QuickEdit v2.0.1 (v3440)
+
+# Features	
+	- Add Center Pivot action.
+	- Add Combine Meshes menu item.
+
+# Bug Fixes
+	- Fix bug where editing meshes with multiple submeshes would throw null-reference errors.
+	- Fix offset element highlighting after translating a mesh position in inspector.
+
+-- QuickEdit v2.0.0 (v3412)
+	
+# Features
+	- Unity 5 compatible.
+	- Streamlined editing and mesh saving.
+	- Full Undo support.
+	- Scene handles no longer require gizmo children.
+	- Delete faces from any mesh.
+	- Triangulate any mesh (facetize, low poly-ize, etc).
+	- Rebuild colliders on the fly.
+	- Rebuild normals for any mesh.
+	- Generate UV2 for procedural meshes.
+	- Rotate and scale handles now supported.
+	- Edit by face, edge, or vertex.
+
+-- QuickEdit v1.5.2
+
+# Bug Fixes
+	- Fix namespace conflict with Bundle packages in Unity 5.
+
+-- QuickEdit v1.5.1
+
+# Bug Fixes
+	- Wrap DrawGizmos attributes in #if UNITY_EDITOR defines to prevent compilation breakage.
+
+-- QuickEdit v1.5.0
+
+# Bug Fixes
+	- Recalculate collider dimensions on exiting edit mode. Fixed #59
+	- Use a unique asset path when copying mesh data to the project. Fixed #63
+	- Use a TRS class to store position, rotation, and scale of objects so that vertices are updated on all possible changes.  We get rotation support for free with this change - scale remains intransigent.
+	- Remove no longer necessary VertHandlePrefab.  Don't use an if switch in OnDrawGizmos, instead, use the directives specifically designed for designating gizmos on selection / pickables.

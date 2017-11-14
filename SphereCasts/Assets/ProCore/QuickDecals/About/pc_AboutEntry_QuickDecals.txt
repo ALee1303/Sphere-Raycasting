@@ -1,0 +1,6 @@
+name: QuickDecals
+identifier: QuickDecals2_AboutWindowIdentifier
+version: 2.1.1
+revision: 0000
+date: 4-3-2017
+changelog: Assets/ProCore/QuickDecals/About/changelog.txt

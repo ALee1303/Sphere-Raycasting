@@ -1,0 +1,92 @@
+-- QuickDecals 2.1.1 -
+
+# Bug Fixes
+	
+	- Clean up warnings in Unity 5.6.	
+	- Prevent about window from opening other tool changelogs.
+
+-- QuickDecals 2.1.0 -
+
+# Features
+
+	- Add some example decals.
+
+# Bug Fixes
+
+	- Fix bug where using multiple texture atlases could cause QuickDecals to place incorrect decals.
+
+-- QuickDecals 2.0.12 -
+
+# Bug Fixes
+
+	- Fix GUI rendering on macOS Retina display.
+
+
+-- QuickDecals 2.0.11 -
+
+# Bug Fixes
+	- Allow decals to be placed on Terrain objects.
+
+-- QuickDecals 2.0.10 -
+
+# Bug Fixes
+	- Remove Debug code exposed by 5.1 patch.
+
+
+-- QuickDecals 2.0.9 -
+
+# Features
+	- Unity 5.1 compatibility.
+
+-- QuickDecals 2.0.8 -
+
+# Bug Fixes
+	- When removing a decal from an atlas group, mark that group as not packed.
+	- Fix minor layout issues with Unity 5.
+
+-- QuickDecals 2.0.7 -
+
+# Bug Fixes
+	- Fix deprecated API warnings in Unity 5.
+	- Fix namespace conflicts with Bundle packages in Unity 5.
+
+-- QuickDecals 2.0.6 -
+
+# Bug Fixes
+	- Fix bug where instantiating prefabs in scene (runtime or editor) would not correctly initialize child decal material if textue not packed.
+
+-- QuicKDecals 2.0.5 -
+
+# Features
+	- Prefab support.
+	- Option to parent decals to the object they are placed on.
+
+# Bug Fixes
+	- Explicitly reference ProCore.Decals.Decal in qd_Database and qd_Editor, clearing up namespace issues with other Decal classes.
+	- Automatically remove decals that have been deleted from the project.
+	- Fix bug where creating multiple texture atlases would overwrite one another.
+
+-- QuicKDecals 2.0.4 -
+
+# Bug Fixes
+	- Enable Shift+Right Click shortcut on Mac.
+	- Fix bug where Ctrl-Shift-Click on Mac would prevent SceneView interaction.
+	- Fix NullRef when first object dragged to new QuickDecals window is not a Texture2D type.
+
+-- QuicKDecals 2.0.3 -
+
+# Bug Fixes
+	- Fix compile errors when building project.
+
+-- QuicKDecals 2.0.0 -
+
+# Features
+	- Completely redesigned interface, featuring:
+		- Drag and drop sorting
+		- Organizational Groups
+		- Search Bar
+	- Texture atlasing
+	- Decal database saves your decal library
+
+# Bug Fixes
+	- New tool, no bugs to fix yet!

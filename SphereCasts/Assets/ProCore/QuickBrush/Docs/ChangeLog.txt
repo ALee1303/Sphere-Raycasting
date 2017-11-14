@@ -1,0 +1,110 @@
+# QuickBrush 1.2.1f0
+
+- Remove `X` keyboard shortcut toggle for changing placement mode since it conflicts with Unity shortcuts.  Toggle between placement and removal by clicking the brush/eraser icon.
+- Update and improve documentation.
+
+# QuickBrush 1.2.0f0
+
+- New Feature: Add option to open QuickBrush window in floating or docking mode (right click in window).
+- New Feature: If no previous templates are found when loading QuickBrush, create a new template so that users can immediately drag prefabs into the window without having to first create a new template.
+- New Feature Add links to docs, webpage, and contact in About window.
+- Fixed Bug: Fix null reference errors when the Template folder either isn't created or is not in ProCore/QuickBrush/Templates path.
+- Fixed Bug: Update deprecated `Resources.LoadAssetAtPath` calls.
+- Fixed Bug: Disable logging by default.
+- Fixed Bug: Make link to online documentation in help window clickable.
+- Fixed Bug: Always repaint the window when a new tooltip is ready.
+- Change: Drop unity 4.2 and lower support.
+- Change: Remove Templates folder so that the 5.3 installer doesn't remove user's saved templates.
+
+# QuickBrush 1.1.1d
+
+- New Feature: A new scale setting was added allowing scaling to be applied as an absolute value or as a multiplier applied to the scale saved in the prefab being placed
+- Compatibility: Updated for Unity 5
+
+
+# QuickBrush 1.1.1c
+
+- Fixed Bug: qb_prefabObject class error in build - needs UnityEditor namespace. Moved all Editor only files to Editor folder to exclude them from stand alone builds.
+
+
+# QuickBrush 1.1.1b
+
+- Fixed Bug: Prefab check and remove buttons not working.
+
+
+# QuickBrush 1.1.1
+
+- Fixed Bug: Painting failed when paint to layer is checked
+- New Feature: Clicking on a prefab preview now selects the prefab in the project view
+- Tweak: Brushes in the scene now display their tab number next to the brush radius ring for each active template. The brush for the selected template displays in blue while brushes for any other active templates display in grey
+- Tweak: Removed 'Scatter Amount' option because it was redundant and interfered with the new brush display setup
+- Tweak: Layer handling when using multiple templates together has been improved
+- Tweak: Prefab preview handling is improved to prevent cases when a preview would not show up immediately when a prefab is dropped in for the first time
+
+
+# QuickBrush 1.1.0
+
+- New Feature: Multi-brush painting. Use multiple brushes simultaneously, each with its own settings.
+- New Feature: Added a master On/Off toggle which allows the user to free up the hotkeys used by qb without closing the tool window. (just click on the brush indicator icon to turn qb on/off)
+- New Feature: Tab Based Interface
+- New Feature: Prefab list display can be toggled between scrollable and grid mode
+- New Feature: qb now comes pre-compiled as a dll (release version only)
+- New Feature: Improved handling of tool closure - Templates are maintained between sessions without saving along with things like which prefab is selected, so when the tool is closed for a moment, it can be re-opened with all settings intact.
+- New Feature: Improved save system - among other improvements, qb notices attempts to override existing templates, and throws many useful dialogs for greater clarity of usage.
+- New Feature: Improved handling of groups - (groups are no longer stored by index, but can be recreated at paint time from stored names). Also Group erasing options are applied in a better way, allowing, for example, to erase only objects that belong to no groups
+- New Feature: Improved cursor with line to show surface normal
+- New Feature: Better graphic icons and icon states
+- New Feature: Log Messages for tab operations
+- New Feature: Added "Edit/Preferences" menu for qb (currently just to toggle Log Messages)
+- Fixed Bug: Interface Slow-down and Repainting has been fixed.
+- Fixed Bug: Secured against user created classes overlapping with UnityEditor.Tool calls inside of qb
+- Fixed Bug: Reset Defaults no longer reloads old settings when a tab is re-accessed by user
+- Fixed Bug: Fixed bug with object distribution across brush surface
+- Tweak: Changes have been made to how hotkeys are handled (this should keep qb from taking over the ctrl key when it shouldn't)
+- Tweak: Better layer testing in object placement pass.
+- PLUS: Many subtle workflow and performance tweaks
+
+
+# QuickBrush 1.0.6
+
+- Tweak: Caught rotation vector warning
+- Tweak: Swapped load brush arrow icon for standard 'Open File' icon
+
+
+# QuickBrush 1.0.5
+
+- Fixed Bug: Scaling error when painting prefabs into groups
+- Compatibility: Added Unity 4.5 compatibility
+- New Feature: Brush templates are now saved into files instead of EditorPrefs, allowing them to be shared and compatible with version control
+- New Feature: Eraser Options foldout allows the eraser to be restricted
+- New Feature: Rotation Sliders now also have entry fields
+- Tweak: QB now prevents the user from creating groups with duplicate names
+- Tweak: Object randomness weight is now saved with the brush template
+- Tweak: Various small tweaks were made to how the controls are placed and behave, including clearing of fields when buttons are pressed.
+
+
+# QuickBrush 1.0.4
+
+- Fixed Bug: Icon locations were hard-coded causing breakage if QB was placed in a location other than the main Assets folder
+- New Feature: Brushes can now be saved to memory slots located at the bottom of the tool
+- New Feature: Alignment axes can now be flipped with a toggle
+- New Feature: Rotation Offsets now use split sliders for added control and have an easy reset button
+- New Feature: A position offset option has been added. Especially handy for embedding objects in the ground
+- New Feature: Paint to Layer allows you to select multiple layers instead of just one
+- New Feature: A "Restore Defaults" button returns settings to default values
+- Tweak: Scale offset fields now have an extra digit of precision
+
+
+# QuickBrush 1.0.3
+
+- Fixed Bug: Prefabs in Drag & Drop list would get duplicated at certain times.
+
+
+# QuickBrush 1.0.2
+
+- Fixed Bug: Namespace missing error in qb_ObjectContainer when making a build.
+
+
+# QuickBrush 1.0.1
+
+- Initial release
