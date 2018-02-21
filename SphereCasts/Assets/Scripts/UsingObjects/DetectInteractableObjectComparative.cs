@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -36,6 +37,7 @@ public class DetectInteractableObjectComparative : MonoBehaviour
     private IInteractable objectToInteractWith; // reference to best Interact candidate
     private RaycastHit[] allHits; // array that will hold all object gathered by spherecast every frame
     private ReturnReferenceMethod returnInteractReference; // delegate for passing objectToInteractWith reference
+    public static event Action<IInteractable> ObjectToInteractWithChanged;
     #endregion private fields
     
     ////Debug////
@@ -51,14 +53,15 @@ public class DetectInteractableObjectComparative : MonoBehaviour
             if (objectToInteractWith != value) 
             {
                 objectToInteractWith = value;
-                returnInteractReference(objectToInteractWith);
+                //returnInteractReference(objectToInteractWith);
+                ObjectToInteractWithChanged(objectToInteractWith);
             }
         }
     }
 
     private void Start()
     {
-        returnInteractReference = this.GetComponent<InteractWithSelectedObject>().GetInteractReference;
+        //returnInteractReference = this.GetComponent<InteractWithSelectedObject>().GetInteractReference;
         allAngle = new Stack<float>();
         allName = new Stack<string>();
     }

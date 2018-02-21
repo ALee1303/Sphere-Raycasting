@@ -47,7 +47,7 @@ public class DetectInteractableObject2 : MonoBehaviour
     private void Start()
     {
         interactSortedByAngle = new SortedList<float, GameObject>();
-        returnInteractReference = this.GetComponent<InteractWithSelectedObject>().GetInteractReference;
+        //returnInteractReference = this.GetComponent<InteractWithSelectedObject>().GetInteractReference;
     }
 
     void FixedUpdate()

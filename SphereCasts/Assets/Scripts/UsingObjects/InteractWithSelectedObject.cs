@@ -17,6 +17,11 @@ public class InteractWithSelectedObject : MonoBehaviour
 {
     private IInteractable selectedInteractableObject; // reference pointing to the object best suitable for interaction
 
+    private void Start()
+    {
+        DetectInteractableObjectComparative.ObjectToInteractWithChanged += o => OnObjectToInteractWithChanged(o);
+    }
+
     private void Update()
     {
         CheckForInteractionInput();
@@ -29,7 +34,7 @@ public class InteractWithSelectedObject : MonoBehaviour
     /// Returns ToInteract picked by raycast to this script's reference.
     /// </summary>
     #region Method(for delegate assignment)   
-    public void GetInteractReference(IInteractable returnedInteract)
+    public void OnObjectToInteractWithChanged(IInteractable returnedInteract)
     {
         selectedInteractableObject = returnedInteract;
     }
