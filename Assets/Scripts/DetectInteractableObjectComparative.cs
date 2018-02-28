@@ -12,7 +12,7 @@ using UnityEngine;
 ///     Third priority: First unblocked IInteractable that was found.
 /// Picked object must be inside the SphereCast and not be blocked by any collider.
 /// </summary>
-public class DetectInteractableObject : MonoBehaviour
+public class DetectInteractableObjectComparative : MonoBehaviour
 {
     #region Editor fields
     [Tooltip("Determines the width of the Capsule cast used to detect object, max = 0.45f")]
