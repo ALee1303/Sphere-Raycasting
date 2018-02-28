@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -24,7 +25,7 @@ public class DetectInteractableObject : MonoBehaviour
     private IInteractable objectToInteractWith; // reference to best Interact candidate
     private RaycastHit[] allHits; // array that will hold all object gathered by spherecast every frame
     private SortedList<float, GameObject> interactSortedByAngle;
-    private ReturnReferenceMethod returnInteractReference; // delegate for passing objectToInteractWith reference
+    public static event Action<IInteractable> ObjectToInteractWithChanged;
     #endregion private fields
 
     // property: sets and pass reference of object to Interact
@@ -36,7 +37,7 @@ public class DetectInteractableObject : MonoBehaviour
             if (objectToInteractWith != value)
             {
                 objectToInteractWith = value;
-                returnInteractReference(objectToInteractWith);
+                ObjectToInteractWithChanged.Invoke(objectToInteractWith);
             }
         }
     }
@@ -47,7 +48,6 @@ public class DetectInteractableObject : MonoBehaviour
     private void Start()
     {
         interactSortedByAngle = new SortedList<float, GameObject>();
-        returnInteractReference = this.GetComponent<InteractWithSelectedObject>().GetInteractReference;
     }
 
     void FixedUpdate()
@@ -103,6 +103,9 @@ public class DetectInteractableObject : MonoBehaviour
         float angle;
         for (int i = 0; i < allHits.Length; i++)
         {
+#if UNITY_EDITOR
+            Debug.DrawRay(this.transform.position, allHits[i].transform.position - this.transform.position);
+#endif
             if (allHits[i].collider.GetComponent<IInteractable>() == null)
                 continue; // if it's not interactable, skip to next index
             dir = allHits[i].transform.position - this.transform.position; // direction from player towards the object
@@ -126,7 +129,6 @@ public class DetectInteractableObject : MonoBehaviour
     {
         if (!isBlocked(toCheck)) // if its not blocked
         {
-            Debug.DrawRay(this.transform.position, toCheck.transform.position - this.transform.position);
             return toCheck.GetComponent<IInteractable>(); // grab the interactable of the object
         }
         else // if its blocked

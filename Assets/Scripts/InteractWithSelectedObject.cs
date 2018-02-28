@@ -14,16 +14,24 @@ public class InteractWithSelectedObject : MonoBehaviour
     private void OnEnable()
     {
         DetectInteractableObject.ObjectToInteractWithChanged += OnObjectToInteractWithChanged;
+        DetectInteractableObjectComparative.ObjectToInteractWithChanged += OnObjectToInteractWithChanged;
     }
 
     private void OnDisable()
     {
         DetectInteractableObject.ObjectToInteractWithChanged -= OnObjectToInteractWithChanged;
+        DetectInteractableObjectComparative.ObjectToInteractWithChanged -= OnObjectToInteractWithChanged;
     }
 
     private void Update()
     {
-        CheckForInteractionInput();
+        if (Input.GetButtonDown("Interact"))
+            CheckForInteractionInput();
+#if UNITY_EDITOR
+        if (objectToInteractWith != null)
+        Debug.DrawRay(this.transform.position, ((MonoBehaviour)objectToInteractWith).transform.position - this.transform.position, Color.green);
+#endif
+
     }
 
     /// <summary>
@@ -41,10 +49,13 @@ public class InteractWithSelectedObject : MonoBehaviour
     /// </summary>
     private void CheckForInteractionInput()
     {
-        if (objectToInteractWith != null && Input.GetButtonDown("Interact"))
+        if (objectToInteractWith != null)
         {
-            // Passes root gameObject (Player) as interacting agent.
-            objectToInteractWith.Interact(transform.root.gameObject);
+            objectToInteractWith.Interact();
+        }
+        else
+        {
+            Debug.Log("No Interactable Detected");
         }
     }
 }
