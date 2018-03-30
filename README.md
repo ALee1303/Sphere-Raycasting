@@ -2,10 +2,18 @@
 
 Sphere Ray-casting is a wide-range 3D raycasting method that uses Unity [Physics.SphereCast()](https://docs.unity3d.com/ScriptReference/Physics.SphereCast.html) and [Physics.RayCast()](https://docs.unity3d.com/ScriptReference/Physics.Raycast.html) to detect the best GameObject that can be interacted.
 
+## Objective
+
+While in developement of third-person puzzle game Aiku, I was tasked to come up with an improved raycasting method to provide a wider range of detection. Our head developer initially wanted to use the Unity provided SphereCast() method, but there were two missing functionallity in this method that were required to achieve the performance we needed.
+
+One was checking whether the inspect object is blocked or not, whether it may be a terrain or uninteractable objects. This would mean even if the blocked object was scripted to be interactable, it might actually be unsuitable for interaction.
+
+Second was the way SphereCast sorted the objects. Unity3D's Physics.SphereCast() returns an array-based heap of RayCastHit to its provided parameter _hitinfo_, sorted by their distance from the SphereCast's starting position. Although this was a useful information that could be used to prioritize the object to interact with when more than one interactables were in range, our head developer specifically wanted a way of prioritizing object interaction by the angle between the object and center of the screen.
+
 | ![gif](https://i.imgur.com/eSDGxZp.gif) ![gif](https://i.imgur.com/RQWWBCT.gif) |
 |:--- |
-| ***(Left)** Sphere-RayCasting range is visible by the two red spheres displayed on the editor screen.(The SphereCast sweeps between two red sphere to create a cylindrical range.) The green line indicates that the object has been detected and is not blocked.* |
-| ***(Right)** When more than one object is in range,indicated by the lines drawn towards the object(white lines indicate objects not blocked, green line indicates the prioritized object for interaction), activated object is selected by their angle offset from center of the screen. Notice that when both blue and pink sphere is in-range, green lines interchange depending on the camera's view.* |
+| ***(Left)** The SphereCast sweeps between two red sphere to create a cylindrical range collecting all the object. The green line indicates that the object has been detected and is not blocked.* |
+| ***(Right)** When more than one object is in range, suitable object is selected by their angle offset from center of the screen. Notice that when both blue and pink sphere is in-range, green lines interchange depending on the camera's view.* |
 
 ## Project Description
 
@@ -14,7 +22,6 @@ This project provides scripts needed to implement Sphere Ray-casting and an exam
 ## Table of Content
 
 <!--ts-->
-* [Objective](#objective)
 * [Performance Overview](#performance-overview)
   * [Analysis of SphereCast](#analysis-of-spherecast)
   * [Analysis of Block Check](#analysis-of-block-check)
@@ -30,21 +37,13 @@ This project provides scripts needed to implement Sphere Ray-casting and an exam
 * [License](#license)
 <!--te-->
 
-## Objective
-
-While in developement of third-person puzzle game Aiku, I was tasked to come up with an improved raycasting method to provide a wider range of detection. Our head developer initially wanted to use the Unity provided SphereCast() method, but there were two missing functionallity in this method that were required to achieve the performance we needed.
-
-One was checking whether the inspect object is blocked or not, whether it may be a terrain or uninteractable objects. This would mean even if the blocked object was scripted to be interactable, it might actually be unsuitable for interaction.
-
-Second was the way SphereCast sorted the objects. Unity3D's Physics.SphereCast() returns an array-based heap of RayCastHit to its provided parameter _hitinfo_, sorted by their distance from the SphereCast's starting position. Although this was a useful information that could be used to prioritize the object to interact with when more than one interactables were in range, our head developer specifically wanted a way of prioritizing object interaction by the angle between the object and center of the screen.
-
 ## Performance Overview
 
 Sphere Ray-cast allows wider ray-casting method in first-person game by first gathering all objects inside a range created by sweeping a sphere in front of character and determining if they're blocked by any object.
 
 | ![gif](https://i.imgur.com/pDdh7Q7.gif) |
 |:---|
-| ***(1)** Succesful block checks are shown by gizmo lines on editor window. White lines are every objects in-range that are not blocked. Green line indicates the best suitable interactable object. **(2)** Blue and Pink Cubes are both interactable objects in range of SphereCast(), displayed by red gizmo sphere in editor window. However, when blocked by the uninteractable red wall, it fails block check. (As shown above when cubes are blocked from player's view, white lines are drawn from player to the red wall, but no lines are drawn towards the interactable cubes)* |
+| ***(1)** Succesful block checks are shown by gizmo lines on editor window. White lines are every objects in-range that are not blocked. Green line indicates the object is best suitable for interaction. **(2)** Blue and Pink Cubes are both interactable objects in range of SphereCast(). However, when blocked by the uninteractable red wall, it fails block check. (As shown above, white lines are drawn from player to the red wall, but no lines are drawn towards the interactable cubes)* |
 
 There are two versions of sphere ray-cast:
 
