@@ -22,12 +22,7 @@ This project provides scripts needed to implement Sphere Ray-casting and an exam
 ## Table of Content
 
 <!--ts-->
-* [Performance Overview](#performance-overview)
-  * [Analysis of SphereCast](#analysis-of-spherecast)
-  * [Analysis of Block Check](#analysis-of-block-check)
-  * [Analysis of Angle Comparison](#analysis-of-angle-comparison)
-  * [Analysis of Recursion](#analysis-of-recursion)
-  * [Possible Improvements](#possible-improvements)
+
 * [How to Setup](#how-to-setup)
   * [Requirements](#requirements)
   * [Deployment](#deployment)
@@ -35,7 +30,76 @@ This project provides scripts needed to implement Sphere Ray-casting and an exam
   * [Requirement and Deployment](#requirement-and-deployment)
   * [Running the Test](#running-the-test)
 * [License](#license)
+* [Performance Overview](#performance-overview)
+  * [Analysis of SphereCast](#analysis-of-spherecast)
+  * [Analysis of Block Check](#analysis-of-block-check)
+  * [Analysis of Angle Comparison](#analysis-of-angle-comparison)
+  * [Analysis of Recursion](#analysis-of-recursion)
+  * [Possible Improvements](#possible-improvements)
 <!--te-->
+
+## How to Setup
+
+These explanations will get you through implementing sphere raycast on any Unity Project with versions that allow [Physics.SphereCast()](https://docs.unity3d.com/ScriptReference/Physics.SphereCast.html) or [Physics.RayCast()](https://docs.unity3d.com/ScriptReference/Physics.Raycast.html).
+
+-------------------------------------------------
+
+### Requirements
+
+* Unity 2017
+* 3D Unity scene
+* Any kind of FPS control with camera attached
+
+__In order for GameObjects to be detected by this ray-cast, it must implement _IInteractable_ interface, also provided by this project.__
+
+-------------------------------------------------
+
+### Deployment
+
+1. Enabling Ray-cast
+* Attach either __DetectInteractableObject.cs__ or __DetectInteractableObjectComparative.cs__ to the FPS character. If main camera is attached to the child, attach it to that child.
+* Attach __InteractWithSelectedObject.cs__ to the same GameObject.
+* Adjust editor fields to acquire desired range. See comments on scripts for detail.
+
+| ![gif](https://i.imgur.com/bettbgN.gif) |
+|:---|
+| *example of a correctly implemented inspector using Unity3D's preset FPSController.* |
+
+2. Making Detectable GameObject
+* Create a MonoBehaviour class that implements IInteractable
+* Add code for desired interaction inside Interact() method, which will be called when __Interact__ input is pressed while this object is detected.
+* Attach the created MonoBehaviour script on GameObjects you want player to interact with.
+
+## Example Overview
+
+These explanation describes the provided example scene [Assets/Scenes/SphereCastTest.unity](https://github.com/ALee1303/Sphere-Raycasting/tree/master/Assets/Scenes).
+
+-------------------------------------------------
+
+### Requirement and Deployment
+* Project Version: Unity2017.3.1
+* To avoid version conflict, import package __SphereCastTest.unitypackage__ into an existing project and open the scene.
+* I recommend running test with editor screen on to see full functionality.
+
+-------------------------------------------------
+
+### Running the Test
+* Scene consit of Unity FirstPersonCharacter controller that implements both versions of raycast.
+* move around the scene and click left-mouse to see which interactables are dectected on various state.
+* Enable one of the Detect scripts attached to FPSController's child to check each functionality.
+* White, blue, and pink objects have interactable implemented and will display message on Console Log when interacted.
+* red objects are not interactable and will block the interactable objects from being detected.
+* Gizmos will be shown on editor screen for details:
+  * White lines will be displayed on every object checked by sphere ray-cast.
+  * Green line shows which object will be interacted when left-mouse is clicked.
+  * Yellow spheres represent __DetectInteractableObject.cs__ range.
+  * Red spheres represent __DetectInteractableObjectComparative.cs__ range.
+
+| ![gif](https://i.imgur.com/ttH5tY8.gif) |
+|:---|
+| *Top view of the provided test scene.* |
+
+-------------------------------------------------
 
 ## Performance Overview
 
@@ -245,67 +309,6 @@ There is one more consideration to make about this greedy algorithm. This greedy
 There are two ways to fix this by changing the data structure provided to the function. We can either use SortedList arranged by distance, adding an ![gif](https://latex.codecogs.com/gif.latex?O(n^2)) time to the algorithm, or use a Minimum Heap prioritized by distance like mentioned above, which will reorder the heap every extraction.
 
 However, both of these solution can effects the linear time complexity improved by the algorithm. Also, with provided extra conditions and thoughtful Game Design, these error can be overcome without even effecting the runtime or the code. The decision is simply up to the way the script is implemented.
-
-## How to Setup
-
-These explanations will get you through implementing sphere raycast on any Unity Project with versions that allow [Physics.SphereCast()](https://docs.unity3d.com/ScriptReference/Physics.SphereCast.html) or [Physics.RayCast()](https://docs.unity3d.com/ScriptReference/Physics.Raycast.html).
-
--------------------------------------------------
-
-### Requirements
-
-* Unity 2017
-* 3D Unity scene
-* Any kind of FPS control with camera attached
-
-__In order for GameObjects to be detected by this ray-cast, it must implement _IInteractable_ interface, also provided by this project.__
-
--------------------------------------------------
-
-### Deployment
-
-1. Enabling Ray-cast
-* Attach either __DetectInteractableObject.cs__ or __DetectInteractableObjectComparative.cs__ to the FPS character. If main camera is attached to the child, attach it to that child.
-* Attach __InteractWithSelectedObject.cs__ to the same GameObject.
-* Adjust editor fields to acquire desired range. See comments on scripts for detail.
-
-| ![gif](https://i.imgur.com/bettbgN.gif) |
-|:---|
-| *example of a correctly implemented inspector using Unity3D's preset FPSController.* |
-
-2. Making Detectable GameObject
-* Create a MonoBehaviour class that implements IInteractable
-* Add code for desired interaction inside Interact() method, which will be called when __Interact__ input is pressed while this object is detected.
-* Attach the created MonoBehaviour script on GameObjects you want player to interact with.
-
-## Example Overview
-
-These explanation describes the provided example scene [Assets/Scenes/SphereCastTest.unity](https://github.com/ALee1303/Sphere-Raycasting/tree/master/Assets/Scenes).
-
--------------------------------------------------
-
-### Requirement and Deployment
-* Project Version: Unity2017.3.1
-* To avoid version conflict, import package __SphereCastTest.unitypackage__ into an existing project and open the scene.
-* I recommend running test with editor screen on to see full functionality.
-
--------------------------------------------------
-
-### Running the Test
-* Scene consit of Unity FirstPersonCharacter controller that implements both versions of raycast.
-* move around the scene and click left-mouse to see which interactables are dectected on various state.
-* Enable one of the Detect scripts attached to FPSController's child to check each functionality.
-* White, blue, and pink objects have interactable implemented and will display message on Console Log when interacted.
-* red objects are not interactable and will block the interactable objects from being detected.
-* Gizmos will be shown on editor screen for details:
-  * White lines will be displayed on every object checked by sphere ray-cast.
-  * Green line shows which object will be interacted when left-mouse is clicked.
-  * Yellow spheres represent __DetectInteractableObject.cs__ range.
-  * Red spheres represent __DetectInteractableObjectComparative.cs__ range.
-
-| ![gif](https://i.imgur.com/ttH5tY8.gif) |
-|:---|
-| *Top view of the provided test scene.* |
 
 ## License
 
