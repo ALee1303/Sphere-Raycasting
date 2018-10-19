@@ -48,9 +48,9 @@ Sphere Ray-cast allows wider ray-casting method in first-person game by first ga
 
 There are two versions of sphere ray-cast:
 
-1. DetectInteractableObject.cs:
+1. SphereRaycast.cs:
 * This script simply sorts all objects collected by angle from center then returns the closest one to the center that is not blocked.
-2. DetectInteractableObjectComparative.cs:
+2. SphereRaycast2.cs:
 * This scrit compares the angle between each objects collected and returns the most optimal one. This may not be an object with the smallest angle from the center.
 * This script uses greedy algorithm and will have better runtime-complexity than the other one.
 * It either returns an object with the closest angle from the camera or closest distance from the player. It also allows a light-weight Observer(Event) patter in designing GameObject interaction.
@@ -266,7 +266,7 @@ __In order for GameObjects to be detected by this ray-cast, it must implement _I
 ### Deployment
 
 1. Enabling Ray-cast
-* Attach either __DetectInteractableObject.cs__ or __DetectInteractableObjectComparative.cs__ to the FPS character. If main camera is attached to the child, attach it to that child.
+* Attach either __SphereRaycast.cs__ or __SphereRaycast2.cs__ to the FPS character. If main camera is attached to the child, attach it to that child.
 * Attach __InteractWithSelectedObject.cs__ to the same GameObject.
 * Adjust editor fields to acquire desired range. See comments on scripts for detail.
 
@@ -301,8 +301,8 @@ These explanation describes the provided example scene [Assets/Scenes/SphereCast
 * Gizmos will be shown on editor screen for details:
   * White lines will be displayed on every object checked by sphere ray-cast.
   * Green line shows which object will be interacted when left-mouse is clicked.
-  * Yellow spheres represent __DetectInteractableObject.cs__ range.
-  * Red spheres represent __DetectInteractableObjectComparative.cs__ range.
+  * Yellow spheres represent __SphereRaycast.cs__ range.
+  * Red spheres represent __SphereRaycast2.cs__ range.
 
 | ![gif](https://i.imgur.com/ttH5tY8.gif) |
 |:---|
