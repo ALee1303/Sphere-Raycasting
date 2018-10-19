@@ -8,7 +8,7 @@ using UnityEngine;
 /// Uses SphereCastAll and SortedList to get the closest object to the center of screen.
 /// Picked object must be inside the SphereCast and not be blocked by any collider.
 /// </summary>
-public class DetectInteractableObject : MonoBehaviour
+public class SphereRaycast : MonoBehaviour
 {
     #region Editor Fields
     [Tooltip("Determines the width of the Capsule cast used to detect object, max = 0.45f")]
@@ -28,7 +28,10 @@ public class DetectInteractableObject : MonoBehaviour
     public static event Action<IInteractable> ObjectToInteractWithChanged;
     #endregion private fields
 
-    // property: sets and pass reference of object to Interact
+    /// <summary>
+    /// Suitaable object determined every frame by the raycast.
+    /// broadcaasts event when value changes.
+    /// </summary>
     public IInteractable ObjectToInteractWith
     {
         get { return objectToInteractWith; }
@@ -52,13 +55,13 @@ public class DetectInteractableObject : MonoBehaviour
 
     void FixedUpdate()
     {
-        querySphereCastHits(); // query all hits from sphereCastAll and check edgecase 1&2
+        QuerySphereCastHits(); // query all hits from sphereCastAll and check edgecase 1&2
 
         #region default case: if edgecase1&2* was passed (more than one object collided with spherecast)
         if (allHits.Length > 1)
         {
-            collectInteractables(); // preparation for edgecase3*: find and sort all IInteractables
-            ObjectToInteractWith = getSuitableInteract(); // cycle through the list to find suitable interact. null if none found.
+            CollectInteractables(); // preparation for edgecase3*: find and sort all IInteractables
+            ObjectToInteractWith = GetOptimalInteract(); // cycle through the list to find suitable interact. null if none found.
             interactSortedByAngle.Clear(); // clear the list for next frame
         }
         #endregion default case
@@ -69,7 +72,7 @@ public class DetectInteractableObject : MonoBehaviour
     /// Method that draws spherecast and query all objects hit to an array.
     /// Then checks edge cases 1 and 2 to see if further checking is needed.
     /// </summary>
-    private void querySphereCastHits()
+    private void QuerySphereCastHits()
     {
         allHits = Physics.SphereCastAll(this.transform.position, castRadius,
                                         this.transform.forward, castDistance); // spherecast to find the objects.
@@ -87,17 +90,17 @@ public class DetectInteractableObject : MonoBehaviour
         {
             GameObject onlyCollided = allHits[0].collider.gameObject; // the only one that was collided
             //Debug.Log(onlyCollided);
-            ObjectToInteractWith = getSuitableInteract(onlyCollided); //skip all the nonsense and just check if the only one is interactable
+            ObjectToInteractWith = GetInteractable(onlyCollided); //skip all the nonsense and just check if the only one is interactable
             return;
         }
         #endregion edgecase2
     }
     /// <summary>
-    /// Method for picking all interactables from array created above.
-    /// Index through the array of hit and check if it is Interactable.
+    /// Method for picking all interactables from array of RaycastHit returned by Spherecast.
+    /// Index through the array of hit and check if it implements IInteractable.
     /// If it is, calculate the angle from the center of the screen and store it to array as sorted
     /// </summary>
-    private void collectInteractables()//find and store all interactables
+    private void CollectInteractables()
     {
         Vector3 dir = new Vector3();
         float angle;
@@ -125,7 +128,7 @@ public class DetectInteractableObject : MonoBehaviour
     /// Interactable of the checked object if not blocked.
     /// Null if the object checked isn't IInteractable or blocked.
     /// </returns>
-    private IInteractable getSuitableInteract(GameObject toCheck)
+    private IInteractable GetInteractable(GameObject toCheck)
     {
         if (!isBlocked(toCheck)) // if its not blocked
         {
@@ -142,13 +145,13 @@ public class DetectInteractableObject : MonoBehaviour
     /// Interactable of the closest unblocked object to the center.
     /// Null if all objects are blocked.
     /// </returns>
-    private IInteractable getSuitableInteract() // returns the closest interactable that isn't blocked
+    private IInteractable GetOptimalInteract() // returns the closest interactable that isn't blocked
     {
         IInteractable returnCandidate;
         foreach (KeyValuePair<float, GameObject> kvp in interactSortedByAngle)
         {
             // checks if current kvp is suitable
-            returnCandidate = getSuitableInteract(kvp.Value);
+            returnCandidate = GetInteractable(kvp.Value);
             if (returnCandidate == null) // move onto next if not
                 continue;
             return returnCandidate;// when candidate found

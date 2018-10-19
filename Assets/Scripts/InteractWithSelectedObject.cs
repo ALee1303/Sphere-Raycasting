@@ -13,14 +13,14 @@ public class InteractWithSelectedObject : MonoBehaviour
 
     private void OnEnable()
     {
-        DetectInteractableObject.ObjectToInteractWithChanged += OnObjectToInteractWithChanged;
-        DetectInteractableObjectComparative.ObjectToInteractWithChanged += OnObjectToInteractWithChanged;
+        SphereRaycast.ObjectToInteractWithChanged += OnObjectToInteractWithChanged;
+        SphereRaycast2.ObjectToInteractWithChanged += OnObjectToInteractWithChanged;
     }
 
     private void OnDisable()
     {
-        DetectInteractableObject.ObjectToInteractWithChanged -= OnObjectToInteractWithChanged;
-        DetectInteractableObjectComparative.ObjectToInteractWithChanged -= OnObjectToInteractWithChanged;
+        SphereRaycast.ObjectToInteractWithChanged -= OnObjectToInteractWithChanged;
+        SphereRaycast2.ObjectToInteractWithChanged -= OnObjectToInteractWithChanged;
     }
 
     private void Update()

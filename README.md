@@ -5,7 +5,7 @@ Sphere Ray-casting is a wide-range 3D raycasting method that uses Unity [Physics
 | ![gif](https://i.imgur.com/eSDGxZp.gif) ![gif](https://i.imgur.com/RQWWBCT.gif) |
 |:--- |
 | ***(Left)** Sphere-RayCasting range is visible by the two red spheres displayed on the editor screen.(The SphereCast sweeps between two red sphere to create a cylindrical range.) The green line indicates that the object has been detected and is not blocked.* |
-| ***(Right)** When more than one object is in range,indicated by the lines drawn towards the object(white lines indicate objects not blocked, green line indicates the prioritized object for interaction), activated object is selected by their angle offset from center of the screen. Notice that when both blue and pink sphere is in-range, green lines interchange depending on the camera's view.* |
+| ***(Right)** When more than one object is in range, indicated by the lines drawn towards the object(white lines indicate objects not blocked, green line indicates the prioritized object for interaction), activated object is selected by their angle offset from center of the screen. Notice that when both blue and pink sphere is in-range, green lines interchange depending on the camera's view.* |
 
 ## Project Description
 
@@ -32,11 +32,11 @@ This project provides scripts needed to implement Sphere Ray-casting and an exam
 
 ## Objective
 
-While in developement of third-person puzzle game Aiku, I was tasked to come up with an improved raycasting method to provide a wider range of detection. Our head developer initially wanted to use the Unity provided SphereCast() method, but there were two missing functionallity in this method that were required to achieve the performance we needed.
+While in development of third-person puzzle game Aiku, I was tasked to come up with an improved raycasting method to provide a wider range of detection. Our head developer initially wanted to use the Unity provided SphereCast() method, but there were two missing functionality in this method that were required to achieve the performance we needed.
 
 One was checking whether the inspect object is blocked or not, whether it may be a terrain or uninteractable objects. This would mean even if the blocked object was scripted to be interactable, it might actually be unsuitable for interaction.
 
-Second was the way SphereCast sorted the objects. Unity3D's Physics.SphereCast() returns an array-based heap of RayCastHit to its provided parameter _hitinfo_, sorted by their distance from the SphereCast's starting position. Although this was a useful information that could be used to prioritize the object to interact with when more than one interactables were in range, our head developer specifically wanted a way of prioritizing object interaction by the angle between the object and center of the screen.
+Second was the way SphereCast sorted the objects. Unity3D's Physics.SphereCast() returns an array-based heap of RayCastHit to its provided parameter _hitinfo_, sorted by their distance from the SphereCast's starting position. Although this was a useful information that could be used to prioritize the object to interact with when more than one interactable were in range, our head developer specifically wanted a way of prioritizing object interaction by the angle between the object and center of the screen.
 
 ## Performance Overview
 
@@ -44,7 +44,7 @@ Sphere Ray-cast allows wider ray-casting method in first-person game by first ga
 
 | ![gif](https://i.imgur.com/pDdh7Q7.gif) |
 |:---|
-| ***(1)** Succesful block checks are shown by gizmo lines on editor window. White lines are every objects in-range that are not blocked. Green line indicates the best suitable interactable object. **(2)** Blue and Pink Cubes are both interactable objects in range of SphereCast(), displayed by red gizmo sphere in editor window. However, when blocked by the uninteractable red wall, it fails block check. (As shown above when cubes are blocked from player's view, white lines are drawn from player to the red wall, but no lines are drawn towards the interactable cubes)* |
+| ***(1)** Successful block checks are shown by gizmo lines on editor window. White lines are every objects in-range that are not blocked. Green line indicates the best suitable interactable object. **(2)** Blue and Pink Cubes are both interactable objects in range of SphereCast(), displayed by red gizmo sphere in editor window. However, when blocked by the uninteractable red wall, it fails block check. (As shown above when cubes are blocked from player's view, white lines are drawn from player to the red wall, but no lines are drawn towards the interactable cubes)* |
 
 There are two versions of sphere ray-cast:
 
@@ -59,7 +59,7 @@ There are two versions of sphere ray-cast:
 
 _1 is easier to implement than 2, but 2 has better control and performance._
 
-***Not considering _SphereCast()_ method, 1 Has <img src="https://latex.codecogs.com/gif.latex?O(n^2)" title="O(n^2)" /> worstcase runtime. 2 has <img src="https://latex.codecogs.com/gif.latex?O(n)" title="O(nl)" /> worstcase runtime.***
+***Not considering _SphereCast()_ method, 1 Has <img src="https://latex.codecogs.com/gif.latex?O(n^2)" title="O(n^2)" /> worst case runtime. 2 has <img src="https://latex.codecogs.com/gif.latex?O(n)" title="O(nl)" /> worst case runtime.***
 
 -------------------------------------------------
 
@@ -110,7 +110,7 @@ This script uses C#'s System.Collection's SortedList to sort all objects by thei
 ```C#
 private SortedList<float,GameObject> interactSortedByAngle;
 ```
-The list takes in every interactable object found by the SphereCast. Before each insertion, the angle from the center is calculated and used as a key to be compared. The script does this by calling the funtion below.
+The list takes in every interactable object found by the SphereCast. Before each insertion, the angle from the center is calculated and used as a key to be compared. The script does this by calling the function below.
 ```C#
 private void collectInteractables()//find and store all interactables
 {
@@ -132,12 +132,12 @@ Since this script simply calls the closest object from the center of the screen,
 
 | ![gif](https://i.imgur.com/jexAVoq.gif) |
 |:---|
-| *All white objects are interactables. Notice how even though white sphere is barely visible and far away than other objects, the script simply designates the sphere as the suitable interact (designated by green line)* |
+| *All white objects are interactable. Notice how even though white sphere is barely visible and far away than other objects, the script simply designates the sphere as the suitable interact (designated by green line)* |
 
 **DetectInteractableComparative.cs**:
 There are few things to take into consideration when solving the above issue.
 
-First, we must consider the distance of each object from the player. We must also consider how small the offset angle is between object and the center of the screen. Controlling these two conditions can prevent problems shown in picture above. Finally, if we can somehow prioritize object by comparing their offset angles, we could further guarantee that the acuqired object is in-fact the most optimal choice, increasing the accuracy of or algorithm.
+First, we must consider the distance of each object from the player. We must also consider how small the offset angle is between object and the center of the screen. Controlling these two conditions can prevent problems shown in picture above. Finally, if we can somehow prioritize object by comparing their offset angles, we could further guarantee that the acquired object is in-fact the most optimal choice, increasing the accuracy of or algorithm.
 
 To implement the features mentioned above, _DetectInteractableComparative.cs_ uses greedy algorithm and memoized dynamic tail-recursion.
 
@@ -207,7 +207,7 @@ if (toCompare == null) // ignore anglecheck if toCompare wasn't suitable
 *If the object is interactable, the following process occurs:*
 
 **Case 2(Terminating Case):**
-First, it wil calculate the angle offset of that object from the center of the screen.
+First, it will calculate the angle offset of that object from the center of the screen.
 ```C#
 Vector3 dir = allHits[index].transform.position - this.transform.position; //directional vector towards object to compare
 int angle = (int)Vector3.Angle(this.transform.forward, dir); // angle to be compared
@@ -241,7 +241,7 @@ Since our array of allHits\[] consist of _n_ elements collided by SphereCast, th
 
 ### Possible Improvements
 
-There is one more consideration to make about this greedy algorithm. This greedy method only works **if and only if** the provided array is ordered. However the array we provided is a minimum heap, meaning element at index 0 will always be a minimum, but the array won't necesarrily be in a complete order depending on the order of the object being inserted. If _allHits\[]_ were an actual heap data structure, we could perform _allHits.ExtractMin()_ to get the minimum every iteration, changing the time complexity to ![gif](https://latex.codecogs.com/gif.latex?O%28n%5Clg%20n%29). However, allHits\[] is just a regular array ordered as a minimum heap when first provided. Depending on the allHits\[] array provided, our returned object may not be the most optimal choice.
+There is one more consideration to make about this greedy algorithm. This greedy method only works **if and only if** the provided array is ordered. However the array we provided is a minimum heap, meaning element at index 0 will always be a minimum, but the array won't necessarily be in a complete order depending on the order of the object being inserted. If _allHits\[]_ were an actual heap data structure, we could perform _allHits.ExtractMin()_ to get the minimum every iteration, changing the time complexity to ![gif](https://latex.codecogs.com/gif.latex?O%28n%5Clg%20n%29). However, allHits\[] is just a regular array ordered as a minimum heap when first provided. Depending on the allHits\[] array provided, our returned object may not be the most optimal choice.
 
 There are two ways to fix this by changing the data structure provided to the function. We can either use SortedList arranged by distance, adding an ![gif](https://latex.codecogs.com/gif.latex?O(n^2)) time to the algorithm, or use a Minimum Heap prioritized by distance like mentioned above, which will reorder the heap every extraction.
 
@@ -293,8 +293,8 @@ These explanation describes the provided example scene [Assets/Scenes/SphereCast
 -------------------------------------------------
 
 ### Running the Test
-* Scene consit of Unity FirstPersonCharacter controller that implements both versions of raycast.
-* move around the scene and click left-mouse to see which interactables are dectected on various state.
+* Scene consist of Unity FirstPersonCharacter controller that implements both versions of raycast.
+* move around the scene and click left-mouse to see which interactable objects are detected on various state.
 * Enable one of the Detect scripts attached to FPSController's child to check each functionality.
 * White, blue, and pink objects have interactable implemented and will display message on Console Log when interacted.
 * red objects are not interactable and will block the interactable objects from being detected.

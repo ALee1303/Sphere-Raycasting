@@ -12,7 +12,7 @@ using UnityEngine;
 ///     Third priority: First unblocked IInteractable that was found.
 /// Picked object must be inside the SphereCast and not be blocked by any collider.
 /// </summary>
-public class DetectInteractableObjectComparative : MonoBehaviour
+public class SphereRaycast2 : MonoBehaviour
 {
     #region Editor fields
     [Tooltip("Determines the width of the Capsule cast used to detect object, max = 0.45f")]
@@ -72,12 +72,12 @@ public class DetectInteractableObjectComparative : MonoBehaviour
             // skip all the nonsense and just check if the only one is interactable
             case 1:
                 GameObject onlyCollided = allHits[0].collider.gameObject;
-                ObjectToInteractWith = GetSuitableInteract(onlyCollided);
+                ObjectToInteractWith = GetInteractable(onlyCollided);
                 break;
             #endregion edgecase2
             #region default case call: if edgecase1&2* was passed (more than one object collided with spherecast)
             default:
-                ObjectToInteractWith = GetSuitableInteract(); // cycle through the list to find suitable interact. null if none found.
+                ObjectToInteractWith = GetOptimalInteract(); // cycle through the list to find suitable interact. null if none found.
                 break;
                 #endregion default case call
         }
@@ -102,10 +102,10 @@ public class DetectInteractableObjectComparative : MonoBehaviour
     /// <param name="toCheck">Hit object to be checked</param>
     /// <returns>
     ///     Interactable of the checked object if not blocked.
-    ///     Null if the object checked isn't IInteractable or blocked.
+    ///     Null if the object doesn't implement IInteractable or blocked.
     /// </returns>
     #region raycast check for obstacles: check if the IInteractable is suitable for interaction
-    private IInteractable GetSuitableInteract(GameObject toCheck)
+    private IInteractable GetInteractable(GameObject toCheck)
     {
         if (!IsBlocked(toCheck))
         {
@@ -133,7 +133,7 @@ public class DetectInteractableObjectComparative : MonoBehaviour
     ///     Null if none can be interacted.
     /// </returns>
     #region default case recursion: recursion override of the above for checking all objects    
-    private IInteractable GetSuitableInteract(IInteractable prevCandidate = null, int prevAngle = 180, int index = 0)
+    private IInteractable GetOptimalInteract(IInteractable prevCandidate = null, int prevAngle = 180, int index = 0)
     {
         #region end recursion
         if (index >= allHits.Length)// at the end of the allHits[] index,
@@ -142,11 +142,11 @@ public class DetectInteractableObjectComparative : MonoBehaviour
 
         // try to get Interactable from current index if it's not blocked
         IInteractable toCompare
-            = GetSuitableInteract(allHits[index].collider.gameObject);
+            = GetInteractable(allHits[index].collider.gameObject);
 
         #region ignore angle check
         if (toCompare == null) // ignore anglecheck if toCompare wasn't suitable
-            return GetSuitableInteract(prevCandidate, prevAngle, index + 1);
+            return GetOptimalInteract(prevCandidate, prevAngle, index + 1);
         #endregion ignore angle check
 
         #region setup for angle check
@@ -160,9 +160,9 @@ public class DetectInteractableObjectComparative : MonoBehaviour
             return toCompare;
         // if theres nothing to compare or current object is more closer to center by comparativeAngle,
         else if (prevCandidate == null || prevAngle - angle > comparativeAngle)
-            return GetSuitableInteract(toCompare, angle, index + 1); // override the previous Interact candidate
+            return GetOptimalInteract(toCompare, angle, index + 1); // override the previous Interact candidate
         // if all failed, ignore this index and go onto next index
-        return GetSuitableInteract(prevCandidate, prevAngle, index + 1);
+        return GetOptimalInteract(prevCandidate, prevAngle, index + 1);
         #endregion
     }
     #endregion default case recursion
