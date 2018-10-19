@@ -1,24 +1,11 @@
-# SphereCast with BlockCheck
+# Sphere Ray-cast using Unity
 
 Sphere Ray-casting is a wide-range 3D raycasting method that uses Unity [Physics.SphereCast()](https://docs.unity3d.com/ScriptReference/Physics.SphereCast.html) and [Physics.RayCast()](https://docs.unity3d.com/ScriptReference/Physics.Raycast.html) to detect the best GameObject that can be interacted.
 
-## Objective
-
-While in developement of third-person puzzle game Aiku, I was tasked to come up with an improved raycasting method to provide a wider range of detection. Our head developer initially wanted to use the Unity provided SphereCast() method, but there were two missing functionallity in this method that were required to achieve the performance we needed.
-
-One was checking whether the inspect object is blocked or not, whether it may be a terrain or uninteractable objects. This would mean even if the blocked object was scripted to be interactable, it might actually be unsuitable for interaction.
-
-Second was the way SphereCast sorted the objects. Unity3D's Physics.SphereCast() returns an array-based heap of RayCastHit to its provided parameter _hitinfo_, sorted by their distance from the SphereCast's starting position. Although this was a useful information that could be used to prioritize the object to interact with when more than one interactables were in range, our head developer specifically wanted a way of prioritizing object interaction by the angle between the object and center of the screen.
-
 | ![gif](https://i.imgur.com/eSDGxZp.gif) ![gif](https://i.imgur.com/RQWWBCT.gif) |
 |:--- |
-<<<<<<< HEAD
 | ***(Left)** Sphere-RayCasting range is visible by the two red spheres displayed on the editor screen.(The SphereCast sweeps between two red sphere to create a cylindrical range.) The green line indicates that the object has been detected and is not blocked.* |
 | ***(Right)** When more than one object is in range, indicated by the lines drawn towards the object(white lines indicate objects not blocked, green line indicates the prioritized object for interaction), activated object is selected by their angle offset from center of the screen. Notice that when both blue and pink sphere is in-range, green lines interchange depending on the camera's view.* |
-=======
-| ***(Left)** The SphereCast sweeps between two red sphere to create a cylindrical range collecting all the object. The green line indicates that the object has been detected and is not blocked.* |
-| ***(Right)** When more than one object is in range, suitable object is selected by their angle offset from center of the screen. Notice that when both blue and pink sphere is in-range, green lines interchange depending on the camera's view.* |
->>>>>>> ffcc44b794319f88c0b073c699493443420711f8
 
 ## Project Description
 
@@ -27,7 +14,13 @@ This project provides scripts needed to implement Sphere Ray-casting and an exam
 ## Table of Content
 
 <!--ts-->
-
+* [Objective](#objective)
+* [Performance Overview](#performance-overview)
+  * [Analysis of SphereCast](#analysis-of-spherecast)
+  * [Analysis of Block Check](#analysis-of-block-check)
+  * [Analysis of Angle Comparison](#analysis-of-angle-comparison)
+  * [Analysis of Recursion](#analysis-of-recursion)
+  * [Possible Improvements](#possible-improvements)
 * [How to Setup](#how-to-setup)
   * [Requirements](#requirements)
   * [Deployment](#deployment)
@@ -35,84 +28,15 @@ This project provides scripts needed to implement Sphere Ray-casting and an exam
   * [Requirement and Deployment](#requirement-and-deployment)
   * [Running the Test](#running-the-test)
 * [License](#license)
-* [Performance Overview](#performance-overview)
-  * [Analysis of SphereCast](#analysis-of-spherecast)
-  * [Analysis of Block Check](#analysis-of-block-check)
-  * [Analysis of Angle Comparison](#analysis-of-angle-comparison)
-  * [Analysis of Recursion](#analysis-of-recursion)
-  * [Possible Improvements](#possible-improvements)
 <!--te-->
 
-## How to Setup
+## Objective
 
-<<<<<<< HEAD
 While in development of third-person puzzle game Aiku, I was tasked to come up with an improved raycasting method to provide a wider range of detection. Our head developer initially wanted to use the Unity provided SphereCast() method, but there were two missing functionality in this method that were required to achieve the performance we needed.
-=======
-These explanations will get you through implementing sphere raycast on any Unity Project with versions that allow [Physics.SphereCast()](https://docs.unity3d.com/ScriptReference/Physics.SphereCast.html) or [Physics.RayCast()](https://docs.unity3d.com/ScriptReference/Physics.Raycast.html).
->>>>>>> ffcc44b794319f88c0b073c699493443420711f8
 
--------------------------------------------------
+One was checking whether the inspect object is blocked or not, whether it may be a terrain or uninteractable objects. This would mean even if the blocked object was scripted to be interactable, it might actually be unsuitable for interaction.
 
-<<<<<<< HEAD
 Second was the way SphereCast sorted the objects. Unity3D's Physics.SphereCast() returns an array-based heap of RayCastHit to its provided parameter _hitinfo_, sorted by their distance from the SphereCast's starting position. Although this was a useful information that could be used to prioritize the object to interact with when more than one interactable were in range, our head developer specifically wanted a way of prioritizing object interaction by the angle between the object and center of the screen.
-=======
-### Requirements
-
-* Unity 2017
-* 3D Unity scene
-* Any kind of FPS control with camera attached
-
-__In order for GameObjects to be detected by this ray-cast, it must implement _IInteractable_ interface, also provided by this project.__
-
--------------------------------------------------
-
-### Deployment
-
-1. Enabling Ray-cast
-* Attach either __DetectInteractableObject.cs__ or __DetectInteractableObjectComparative.cs__ to the FPS character. If main camera is attached to the child, attach it to that child.
-* Attach __InteractWithSelectedObject.cs__ to the same GameObject.
-* Adjust editor fields to acquire desired range. See comments on scripts for detail.
-
-| ![gif](https://i.imgur.com/bettbgN.gif) |
-|:---|
-| *example of a correctly implemented inspector using Unity3D's preset FPSController.* |
-
-2. Making Detectable GameObject
-* Create a MonoBehaviour class that implements IInteractable
-* Add code for desired interaction inside Interact() method, which will be called when __Interact__ input is pressed while this object is detected.
-* Attach the created MonoBehaviour script on GameObjects you want player to interact with.
-
-## Example Overview
-
-These explanation describes the provided example scene [Assets/Scenes/SphereCastTest.unity](https://github.com/ALee1303/Sphere-Raycasting/tree/master/Assets/Scenes).
-
--------------------------------------------------
-
-### Requirement and Deployment
-* Project Version: Unity2017.3.1
-* To avoid version conflict, import package __SphereCastTest.unitypackage__ into an existing project and open the scene.
-* I recommend running test with editor screen on to see full functionality.
-
--------------------------------------------------
-
-### Running the Test
-* Scene consit of Unity FirstPersonCharacter controller that implements both versions of raycast.
-* move around the scene and click left-mouse to see which interactables are dectected on various state.
-* Enable one of the Detect scripts attached to FPSController's child to check each functionality.
-* White, blue, and pink objects have interactable implemented and will display message on Console Log when interacted.
-* red objects are not interactable and will block the interactable objects from being detected.
-* Gizmos will be shown on editor screen for details:
-  * White lines will be displayed on every object checked by sphere ray-cast.
-  * Green line shows which object will be interacted when left-mouse is clicked.
-  * Yellow spheres represent __DetectInteractableObject.cs__ range.
-  * Red spheres represent __DetectInteractableObjectComparative.cs__ range.
-
-| ![gif](https://i.imgur.com/ttH5tY8.gif) |
-|:---|
-| *Top view of the provided test scene.* |
-
--------------------------------------------------
->>>>>>> ffcc44b794319f88c0b073c699493443420711f8
 
 ## Performance Overview
 
@@ -120,11 +44,7 @@ Sphere Ray-cast allows wider ray-casting method in first-person game by first ga
 
 | ![gif](https://i.imgur.com/pDdh7Q7.gif) |
 |:---|
-<<<<<<< HEAD
 | ***(1)** Successful block checks are shown by gizmo lines on editor window. White lines are every objects in-range that are not blocked. Green line indicates the best suitable interactable object. **(2)** Blue and Pink Cubes are both interactable objects in range of SphereCast(), displayed by red gizmo sphere in editor window. However, when blocked by the uninteractable red wall, it fails block check. (As shown above when cubes are blocked from player's view, white lines are drawn from player to the red wall, but no lines are drawn towards the interactable cubes)* |
-=======
-| ***(1)** Succesful block checks are shown by gizmo lines on editor window. White lines are every objects in-range that are not blocked. Green line indicates the object is best suitable for interaction. **(2)** Blue and Pink Cubes are both interactable objects in range of SphereCast(). However, when blocked by the uninteractable red wall, it fails block check. (As shown above, white lines are drawn from player to the red wall, but no lines are drawn towards the interactable cubes)* |
->>>>>>> ffcc44b794319f88c0b073c699493443420711f8
 
 There are two versions of sphere ray-cast:
 
@@ -327,7 +247,6 @@ There are two ways to fix this by changing the data structure provided to the fu
 
 However, both of these solution can effects the linear time complexity improved by the algorithm. Also, with provided extra conditions and thoughtful Game Design, these error can be overcome without even effecting the runtime or the code. The decision is simply up to the way the script is implemented.
 
-<<<<<<< HEAD
 ## How to Setup
 
 These explanations will get you through implementing sphere raycast on any Unity Project with versions that allow [Physics.SphereCast()](https://docs.unity3d.com/ScriptReference/Physics.SphereCast.html) or [Physics.RayCast()](https://docs.unity3d.com/ScriptReference/Physics.Raycast.html).
@@ -389,8 +308,6 @@ These explanation describes the provided example scene [Assets/Scenes/SphereCast
 |:---|
 | *Top view of the provided test scene.* |
 
-=======
->>>>>>> ffcc44b794319f88c0b073c699493443420711f8
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](License.md) file for details
